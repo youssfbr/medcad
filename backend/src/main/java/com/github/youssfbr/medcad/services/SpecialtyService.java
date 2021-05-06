@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.youssfbr.medcad.dto.SpecialtyDTO;
 import com.github.youssfbr.medcad.entities.Specialty;
 import com.github.youssfbr.medcad.repositories.SpecialtyRepository;
+import com.github.youssfbr.medcad.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class SpecialtyService {
@@ -21,9 +22,16 @@ public class SpecialtyService {
 	
 	@Transactional(readOnly = true)
 	public List<SpecialtyDTO> findAll() {
-		List<Specialty> list = repository.findAllByActiveTrue();
+		final List<Specialty> list = repository.findAllByActiveTrue();
 		return list.stream().map(sp -> new SpecialtyDTO(sp)).collect(Collectors.toList());
+	}	
+	
+	@Transactional(readOnly = true)
+	public SpecialtyDTO findById(Long id) {		
+		
+		Specialty entity = repository.findByIdAndActiveTrue(id).orElseThrow(() -> new ResourceNotFoundException("Id " + id + " não encontrado!"));
+		
+		return new SpecialtyDTO(entity);
 	}
-	
-	
+		
 }

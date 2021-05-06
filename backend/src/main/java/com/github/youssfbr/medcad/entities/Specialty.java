@@ -1,11 +1,16 @@
 package com.github.youssfbr.medcad.entities;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -19,6 +24,12 @@ public class Specialty implements Serializable {
 	private String name;
 	private String description;
 	private boolean active;
+	
+	@ManyToMany
+	@JoinTable(name = "tb_doctor_specialty",
+		joinColumns = @JoinColumn(name = "specialty_id"),
+		inverseJoinColumns = @JoinColumn(name = "doctor_id"))
+	private Set<Doctor> doctors = new HashSet<>();
 	
 	public Specialty() {	
 	}
@@ -60,6 +71,10 @@ public class Specialty implements Serializable {
 
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+	
+	public Set<Doctor> getDoctors() {
+		return doctors;
 	}
 
 	@Override

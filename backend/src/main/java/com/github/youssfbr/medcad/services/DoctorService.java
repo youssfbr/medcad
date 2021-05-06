@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.youssfbr.medcad.dto.DoctorDTO;
 import com.github.youssfbr.medcad.entities.Doctor;
 import com.github.youssfbr.medcad.repositories.DoctorRepository;
+import com.github.youssfbr.medcad.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class DoctorService {
@@ -21,7 +22,15 @@ public class DoctorService {
 	
 	@Transactional(readOnly = true)
 	public List<DoctorDTO> findAll() {
-		List<Doctor> list = repository.findAllByActiveTrue();
+		final List<Doctor> list = repository.findAllByActiveTrue();
 		return list.stream().map(doc -> new DoctorDTO(doc)).collect(Collectors.toList());
-	}	
+	}
+	
+	@Transactional(readOnly = true)
+	public DoctorDTO findById(Long id) {		
+		
+		Doctor entity = repository.findByIdAndActiveTrue(id).orElseThrow(() -> new ResourceNotFoundException("Id " + id + " não encontrado!"));
+		
+		return new DoctorDTO(entity);
+	}
 }

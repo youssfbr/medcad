@@ -1,6 +1,9 @@
 package com.github.youssfbr.medcad.dto;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.github.youssfbr.medcad.entities.Specialty;
 
@@ -11,6 +14,8 @@ public class SpecialtyDTO implements Serializable {
 	private String name;
 	private String description;
 	private boolean active;
+	
+	private List<DoctorDTO> doctors = new ArrayList<>();
 	
 	public SpecialtyDTO() {	
 	}
@@ -27,6 +32,8 @@ public class SpecialtyDTO implements Serializable {
 		name = entity.getName();
 		description = entity.getDescription();
 		active = entity.isActive();
+		doctors = entity.getDoctors().stream()
+				.map(x -> new DoctorDTO(x)).collect(Collectors.toList());
 	}
 
 	public Long getId() {
@@ -59,5 +66,10 @@ public class SpecialtyDTO implements Serializable {
 
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+
+	public List<DoctorDTO> getDoctors() {
+		return doctors;
 	}	
+		
 }

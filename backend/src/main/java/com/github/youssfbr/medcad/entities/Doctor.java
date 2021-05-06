@@ -9,8 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
@@ -26,10 +24,7 @@ public class Doctor implements Serializable {
 	private Date birthDate;
 	private boolean active;
 	
-	@ManyToMany
-	@JoinTable(name = "tb_doctor_specialty",
-		joinColumns = @JoinColumn(name = "doctor_id"),
-		inverseJoinColumns = @JoinColumn(name = "specialty_id"))
+	@ManyToMany	
 	private Set<Specialty> specialties = new HashSet<>();
 
 	public Doctor() {	
