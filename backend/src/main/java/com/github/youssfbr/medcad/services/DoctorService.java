@@ -33,4 +33,15 @@ public class DoctorService {
 		
 		return new DoctorDTO(entity);
 	}
+	
+	@Transactional
+	public DoctorDTO insert(DoctorDTO dto) {
+		
+		Doctor entity = new Doctor();		
+		entity.setName(dto.getName());
+		entity.setBirthDate(dto.getBirthDate());		
+		entity = repository.save(entity);
+		
+		return new DoctorDTO(entity);		
+	}
 }

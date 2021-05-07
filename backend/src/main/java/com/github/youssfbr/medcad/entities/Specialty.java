@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 @Entity
@@ -68,13 +69,14 @@ public class Specialty implements Serializable {
 	public boolean isActive() {
 		return active;
 	}
-
-	public void setActive(boolean active) {
-		this.active = active;
-	}
 	
 	public Set<Doctor> getDoctors() {
 		return doctors;
+	}
+	
+	@PrePersist
+	public void prePersist() {
+		active = true;		 
 	}
 
 	@Override
@@ -101,4 +103,5 @@ public class Specialty implements Serializable {
 			return false;
 		return true;
 	}	
+	
 }

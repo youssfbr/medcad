@@ -2,14 +2,12 @@ package com.github.youssfbr.medcad.entities;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 @Entity
@@ -22,10 +20,7 @@ public class Doctor implements Serializable {
 	private Long id;
 	private String name;
 	private Date birthDate;
-	private boolean active;
-	
-	@ManyToMany	
-	private Set<Specialty> specialties = new HashSet<>();
+	private boolean active;	
 
 	public Doctor() {	
 	}
@@ -64,13 +59,10 @@ public class Doctor implements Serializable {
 	public boolean isActive() {
 		return active;
 	}
-
-	public void setActive(boolean active) {
-		this.active = active;
-	}
-
-	public Set<Specialty> getSpecialties() {
-		return specialties;
+	
+	@PrePersist
+	public void prePersist() {
+		active = true;		 
 	}
 
 	@Override
@@ -97,4 +89,5 @@ public class Doctor implements Serializable {
 			return false;
 		return true;
 	}	
+	
 }

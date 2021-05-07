@@ -32,8 +32,7 @@ public class SpecialtyDTO implements Serializable {
 		name = entity.getName();
 		description = entity.getDescription();
 		active = entity.isActive();
-		doctors = entity.getDoctors().stream()
-				.map(x -> new DoctorDTO(x)).collect(Collectors.toList());
+		doctors = entity.getDoctors().stream().map(x -> new DoctorDTO(x)).collect(Collectors.toList());
 	}
 
 	public Long getId() {
