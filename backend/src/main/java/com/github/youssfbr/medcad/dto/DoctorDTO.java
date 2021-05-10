@@ -11,23 +11,23 @@ public class DoctorDTO implements Serializable {
 	private Long id;
 	private String name;
 	private Date birthDate;
-	private boolean active;
+	private boolean isActive;
 		
 	public DoctorDTO() {	
 	}	
 	
-	public DoctorDTO(Long id, String name, Date birthDate, boolean active) {
+	public DoctorDTO(Long id, String name, Date birthDate, boolean isActive) {
 		this.id = id;
 		this.name = name;
 		this.birthDate = birthDate;
-		this.active = active;	
+		this.isActive = isActive;	
 	}
 
 	public DoctorDTO(Doctor entity) {
 		id = entity.getId();
 		name = entity.getName();
 		birthDate = entity.getBirthDate();
-		active = entity.isActive();		
+		isActive = entity.isActive();		
 	}
 
 	public Long getId() {
@@ -55,11 +55,11 @@ public class DoctorDTO implements Serializable {
 	}
 
 	public boolean isActive() {
-		return active;
+		return isActive;
 	}
 
-	public void setActive(boolean active) {
-		this.active = active;
+	public void setActive(final boolean isActive) {
+		this.isActive = isActive;
 	}
 	
 }

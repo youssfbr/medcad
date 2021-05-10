@@ -1,7 +1,10 @@
 package com.github.youssfbr.medcad.services;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
+
+import javax.persistence.EntityNotFoundException;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +17,7 @@ import com.github.youssfbr.medcad.services.exceptions.ResourceNotFoundException;
 @Service
 public class DoctorService {
 
-	private DoctorRepository repository;
+	private final DoctorRepository repository;
 	
 	public DoctorService(final DoctorRepository repository) {
 		this.repository = repository;
@@ -22,14 +25,14 @@ public class DoctorService {
 	
 	@Transactional(readOnly = true)
 	public List<DoctorDTO> findAll() {
-		final List<Doctor> list = repository.findAllByActiveTrue();
+		final List<Doctor> list = repository.findAllByIsActiveTrue();
 		return list.stream().map(doc -> new DoctorDTO(doc)).collect(Collectors.toList());
 	}
 	
 	@Transactional(readOnly = true)
 	public DoctorDTO findById(Long id) {		
 		
-		Doctor entity = repository.findByIdAndActiveTrue(id).orElseThrow(() -> new ResourceNotFoundException("Id " + id + " não encontrado!"));
+		Doctor entity = repository.findByIdAndIsActiveTrue(id).orElseThrow(() -> new ResourceNotFoundException("Id " + id + " não encontrado!"));
 		
 		return new DoctorDTO(entity);
 	}
@@ -44,4 +47,30 @@ public class DoctorService {
 		
 		return new DoctorDTO(entity);		
 	}
+	
+	@Transactional
+	public DoctorDTO update(Long id, DoctorDTO dto) {
+		try {			
+			Doctor entity = repository.getOne(id);
+	
+			copyDtoToEntity(dto, entity);								
+			entity = repository.save(entity);
+			
+			return new DoctorDTO(entity);				
+		} 
+		catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException("Id " + id + " não encontrado!");
+		}		
+	}
+	
+	private boolean validateDto(Object object) {
+		return Objects.nonNull(object) && !object.toString().isEmpty();
+	}
+	
+	private Doctor copyDtoToEntity(DoctorDTO dto, Doctor entity) {
+		entity.setName(validateDto(dto.getName()) ? dto.getName() : entity.getName());
+		entity.setBirthDate(validateDto(dto.getBirthDate()) ? dto.getBirthDate() : entity.getBirthDate());
+		return entity;
+	}
+	
 }

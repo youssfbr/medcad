@@ -24,7 +24,7 @@ public class Specialty implements Serializable {
 	private Long id;
 	private String name;
 	private String description;
-	private boolean active;
+	private boolean isActive;
 	
 	@ManyToMany
 	@JoinTable(name = "tb_doctor_specialty",
@@ -35,11 +35,11 @@ public class Specialty implements Serializable {
 	public Specialty() {	
 	}
 
-	public Specialty(Long id, String name, String description, boolean active) {
+	public Specialty(Long id, String name, String description, boolean isActive) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
-		this.active = active;
+		this.isActive = isActive;
 	}
 
 	public Long getId() {
@@ -67,7 +67,7 @@ public class Specialty implements Serializable {
 	}
 
 	public boolean isActive() {
-		return active;
+		return isActive;
 	}
 	
 	public Set<Doctor> getDoctors() {
@@ -76,7 +76,7 @@ public class Specialty implements Serializable {
 	
 	@PrePersist
 	public void prePersist() {
-		active = true;		 
+		isActive = true;		 
 	}
 
 	@Override

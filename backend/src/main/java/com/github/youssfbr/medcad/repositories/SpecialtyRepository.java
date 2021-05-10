@@ -11,6 +11,6 @@ import com.github.youssfbr.medcad.entities.Specialty;
 @Repository
 public interface SpecialtyRepository extends JpaRepository<Specialty, Long>{
 
-	List<Specialty> findAllByActiveTrue();
-	Optional<Specialty> findByIdAndActiveTrue(Long id);
+	List<Specialty> findAllByIsActiveTrue();
+	Optional<Specialty> findByIdAndIsActiveTrue(Long id);
 }

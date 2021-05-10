@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +20,7 @@ import com.github.youssfbr.medcad.services.DoctorService;
 @RequestMapping("/doctors")
 public class DoctorController {
 	
-	private DoctorService service;
+	private final DoctorService service;
 	
 	public DoctorController(final DoctorService service) {
 		this.service = service;
@@ -43,6 +44,13 @@ public class DoctorController {
 				.buildAndExpand(dto.getId()).toUri();
 				
 		return ResponseEntity.created(uri).body(dto);
+	}
+	
+	@PutMapping("/{id}")
+	public ResponseEntity<DoctorDTO> update(@PathVariable Long id, @RequestBody DoctorDTO dto) {
+		dto = service.update(id, dto);
+				
+		return ResponseEntity.ok(dto);
 	}
 	
 }

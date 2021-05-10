@@ -11,6 +11,6 @@ import com.github.youssfbr.medcad.entities.Doctor;
 @Repository
 public interface DoctorRepository extends JpaRepository<Doctor, Long>{
 	
-	List<Doctor> findAllByActiveTrue();
-	Optional<Doctor> findByIdAndActiveTrue(Long id);
+	List<Doctor> findAllByIsActiveTrue();
+	Optional<Doctor> findByIdAndIsActiveTrue(Long id);
 }

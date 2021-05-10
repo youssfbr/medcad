@@ -20,16 +20,16 @@ public class Doctor implements Serializable {
 	private Long id;
 	private String name;
 	private Date birthDate;
-	private boolean active;	
+	private boolean isActive;	
 
 	public Doctor() {	
 	}
 
-	public Doctor(Long id, String name, Date birthDate, boolean active) {
+	public Doctor(Long id, String name, Date birthDate, boolean isActive) {
 		this.id = id;
 		this.name = name;
 		this.birthDate = birthDate;
-		this.active = active;
+		this.isActive = isActive;
 	}
 
 	public Long getId() {
@@ -57,12 +57,12 @@ public class Doctor implements Serializable {
 	}
 
 	public boolean isActive() {
-		return active;
+		return isActive;
 	}
 	
 	@PrePersist
 	public void prePersist() {
-		active = true;		 
+		isActive = true;		 
 	}
 
 	@Override

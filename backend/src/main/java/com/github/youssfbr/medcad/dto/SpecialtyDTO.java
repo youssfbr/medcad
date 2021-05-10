@@ -13,25 +13,25 @@ public class SpecialtyDTO implements Serializable {
 	private Long id;
 	private String name;
 	private String description;
-	private boolean active;
+	private boolean isActive;
 	
 	private List<DoctorDTO> doctors = new ArrayList<>();
 	
 	public SpecialtyDTO() {	
 	}
 
-	public SpecialtyDTO(Long id, String name, String description, boolean active) {
+	public SpecialtyDTO(Long id, String name, String description, boolean isActive) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
-		this.active = active;
+		this.isActive = isActive;
 	}
 	
 	public SpecialtyDTO(final Specialty entity) {
 		id = entity.getId();
 		name = entity.getName();
 		description = entity.getDescription();
-		active = entity.isActive();
+		isActive = entity.isActive();
 		doctors = entity.getDoctors().stream().map(x -> new DoctorDTO(x)).collect(Collectors.toList());
 	}
 
@@ -60,11 +60,11 @@ public class SpecialtyDTO implements Serializable {
 	}
 
 	public boolean isActive() {
-		return active;
+		return isActive;
 	}
 
-	public void setActive(boolean active) {
-		this.active = active;
+	public void setActive(final boolean isActive) {
+		this.isActive = isActive;
 	}
 
 	public List<DoctorDTO> getDoctors() {

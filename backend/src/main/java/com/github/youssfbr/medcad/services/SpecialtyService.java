@@ -3,6 +3,8 @@ package com.github.youssfbr.medcad.services;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,14 +29,14 @@ public class SpecialtyService {
 	
 	@Transactional(readOnly = true)
 	public List<SpecialtyDTO> findAll() {
-		final List<Specialty> list = repository.findAllByActiveTrue();
+		final List<Specialty> list = repository.findAllByIsActiveTrue();
 		return list.stream().map(sp -> new SpecialtyDTO(sp)).collect(Collectors.toList());
 	}	
 	
 	@Transactional(readOnly = true)
 	public SpecialtyDTO findById(Long id) {		
 		
-		Specialty entity = repository.findByIdAndActiveTrue(id).orElseThrow(() -> new ResourceNotFoundException("Id " + id + " não encontrado!"));
+		Specialty entity = repository.findByIdAndIsActiveTrue(id).orElseThrow(() -> new ResourceNotFoundException("Id " + id + " não encontrado!"));
 		
 		return new SpecialtyDTO(entity);
 	}
@@ -53,6 +55,21 @@ public class SpecialtyService {
 		entity = repository.save(entity);
 		
 		return new SpecialtyDTO(entity);
+	}
+	
+	@Transactional
+	public SpecialtyDTO update(Long id, SpecialtyDTO dto) {
+		try {
+			Specialty entity = repository.getOne(id);
+			entity.setName(dto.getName());
+			entity.setDescription(dto.getDescription());		
+			entity = repository.save(entity);
+			
+			return new SpecialtyDTO(entity);				
+		} 
+		catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException("Id " + id + " não encontrado!");
+		}		
 	}
 		
 }
