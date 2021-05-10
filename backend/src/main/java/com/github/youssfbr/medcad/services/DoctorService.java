@@ -32,7 +32,8 @@ public class DoctorService {
 	@Transactional(readOnly = true)
 	public DoctorDTO findById(Long id) {		
 		
-		Doctor entity = repository.findByIdAndIsActiveTrue(id).orElseThrow(() -> new ResourceNotFoundException("Id " + id + " não encontrado!"));
+		Doctor entity = repository.findByIdAndIsActiveTrue(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Id " + id + " não encontrado!"));
 		
 		return new DoctorDTO(entity);
 	}
@@ -61,6 +62,22 @@ public class DoctorService {
 		catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException("Id " + id + " não encontrado!");
 		}		
+	}
+	
+	@Transactional
+	public void delete(Long id) {
+		try {
+			
+			Doctor entity = repository.findByIdAndIsActiveTrue(id)
+					.orElseThrow(() -> new ResourceNotFoundException("Id " + id + " não encontrado!"));
+			
+			entity.setActive(false);
+			
+			repository.save(entity);
+		} 
+		catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException("Id " + id + " não encontrado!");
+		} 		
 	}
 	
 	private boolean validateDto(Object object) {

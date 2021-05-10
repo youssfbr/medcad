@@ -58,8 +58,12 @@ public class Doctor implements Serializable {
 
 	public boolean isActive() {
 		return isActive;
-	}
+	}	
 	
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+
 	@PrePersist
 	public void prePersist() {
 		isActive = true;		 
