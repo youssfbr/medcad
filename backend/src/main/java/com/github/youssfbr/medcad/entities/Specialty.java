@@ -4,12 +4,11 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
@@ -22,16 +21,17 @@ public class Specialty implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
 	private String name;
+	
+	@Column(columnDefinition = "TEXT")
 	private String description;
+	
 	private boolean isActive;
-	
-	@ManyToMany
-	@JoinTable(name = "tb_doctor_specialty",
-		joinColumns = @JoinColumn(name = "specialty_id"),
-		inverseJoinColumns = @JoinColumn(name = "doctor_id"))
+		
+	@ManyToMany(mappedBy = "specialties")
 	private Set<Doctor> doctors = new HashSet<>();
-	
+		
 	public Specialty() {	
 	}
 
@@ -68,12 +68,16 @@ public class Specialty implements Serializable {
 
 	public boolean isActive() {
 		return isActive;
-	}
+	}	
 	
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+
 	public Set<Doctor> getDoctors() {
 		return doctors;
-	}
-	
+	}	
+
 	@PrePersist
 	public void prePersist() {
 		isActive = true;		 

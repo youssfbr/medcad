@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +21,7 @@ import com.github.youssfbr.medcad.services.SpecialtyService;
 @RequestMapping("/specialties")
 public class SpecialtyController {
 	
-	private SpecialtyService service;
+	private final SpecialtyService service;
 	
 	public SpecialtyController(final SpecialtyService service) {
 		this.service = service;
@@ -51,6 +52,14 @@ public class SpecialtyController {
 		dto = service.update(id, dto);
 				
 		return ResponseEntity.ok(dto);
+	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> delete(@PathVariable Long id) {
+
+		service.delete(id);
+
+		return ResponseEntity.noContent().build();
 	}
 
 }

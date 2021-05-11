@@ -2,11 +2,16 @@ package com.github.youssfbr.medcad.entities;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
@@ -18,10 +23,17 @@ public class Doctor implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
 	private String name;
 	private Date birthDate;
 	private boolean isActive;	
-
+	
+	@ManyToMany
+	@JoinTable(name = "tb_doctor_specialty",
+		joinColumns = @JoinColumn(name = "doctor_id"),
+		inverseJoinColumns = @JoinColumn(name = "specialty_id"))
+	Set<Specialty> specialties = new HashSet<>();
+	
 	public Doctor() {	
 	}
 
@@ -62,6 +74,10 @@ public class Doctor implements Serializable {
 	
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
+	}	
+
+	public Set<Specialty> getSpecialties() {		
+		return specialties;
 	}
 
 	@PrePersist

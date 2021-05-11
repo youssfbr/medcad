@@ -1,17 +1,25 @@
 package com.github.youssfbr.medcad.dto;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.github.youssfbr.medcad.entities.Doctor;
+import com.github.youssfbr.medcad.entities.Specialty;
 
 public class DoctorDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
 	private String name;
-	private Date birthDate;
-	private boolean isActive;
+	private Date birthDate;	
+		
+	@JsonInclude(Include.NON_DEFAULT)	
+	private List<SpecialtyDTO> specialties = new ArrayList<>();
 		
 	public DoctorDTO() {	
 	}	
@@ -19,15 +27,18 @@ public class DoctorDTO implements Serializable {
 	public DoctorDTO(Long id, String name, Date birthDate, boolean isActive) {
 		this.id = id;
 		this.name = name;
-		this.birthDate = birthDate;
-		this.isActive = isActive;	
+		this.birthDate = birthDate;			
 	}
 
 	public DoctorDTO(Doctor entity) {
 		id = entity.getId();
 		name = entity.getName();
-		birthDate = entity.getBirthDate();
-		isActive = entity.isActive();		
+		birthDate = entity.getBirthDate();				
+	}
+	
+	public DoctorDTO(Doctor entity, Set<Specialty> specialties) {
+		this(entity);
+		specialties.forEach(sp -> this.specialties.add(new SpecialtyDTO(sp)));		
 	}
 
 	public Long getId() {
@@ -54,12 +65,12 @@ public class DoctorDTO implements Serializable {
 		this.birthDate = birthDate;
 	}
 
-	public boolean isActive() {
-		return isActive;
+	public List<SpecialtyDTO> getSpecialties() {
+		return specialties;
 	}
 
-	public void setActive(final boolean isActive) {
-		this.isActive = isActive;
-	}
+	public void setSpecialties(List<SpecialtyDTO> specialties) {
+		this.specialties = specialties;
+	}	
 	
 }

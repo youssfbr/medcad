@@ -10,8 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.github.youssfbr.medcad.dto.DoctorDTO;
+import com.github.youssfbr.medcad.dto.SpecialtyDTO;
 import com.github.youssfbr.medcad.entities.Doctor;
+import com.github.youssfbr.medcad.entities.Specialty;
 import com.github.youssfbr.medcad.repositories.DoctorRepository;
+import com.github.youssfbr.medcad.repositories.SpecialtyRepository;
 import com.github.youssfbr.medcad.services.exceptions.ResourceNotFoundException;
 
 @Service
@@ -19,14 +22,18 @@ public class DoctorService {
 
 	private final DoctorRepository repository;
 	
-	public DoctorService(final DoctorRepository repository) {
+	private final SpecialtyRepository specialtyRepository;
+	
+	public DoctorService(final DoctorRepository repository, final SpecialtyRepository specialtyRepository) {
 		this.repository = repository;
+		this.specialtyRepository = specialtyRepository;
 	}
 	
 	@Transactional(readOnly = true)
 	public List<DoctorDTO> findAll() {
 		final List<Doctor> list = repository.findAllByIsActiveTrue();
-		return list.stream().map(doc -> new DoctorDTO(doc)).collect(Collectors.toList());
+		return list.stream()
+				.map(entity -> new DoctorDTO(entity, entity.getSpecialties())).collect(Collectors.toList());
 	}
 	
 	@Transactional(readOnly = true)
@@ -34,30 +41,32 @@ public class DoctorService {
 		
 		Doctor entity = repository.findByIdAndIsActiveTrue(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Id " + id + " não encontrado!"));
-		
-		return new DoctorDTO(entity);
+				
+		return new DoctorDTO(entity, entity.getSpecialties());
 	}
 	
 	@Transactional
 	public DoctorDTO insert(DoctorDTO dto) {
 		
 		Doctor entity = new Doctor();		
-		entity.setName(dto.getName());
-		entity.setBirthDate(dto.getBirthDate());		
+			
+		copyDtoToEntity(dto, entity);	
+				
 		entity = repository.save(entity);
-		
-		return new DoctorDTO(entity);		
+				
+		return new DoctorDTO(entity, entity.getSpecialties());		
 	}
 	
 	@Transactional
 	public DoctorDTO update(Long id, DoctorDTO dto) {
 		try {			
+			
 			Doctor entity = repository.getOne(id);
 	
 			copyDtoToEntity(dto, entity);								
 			entity = repository.save(entity);
 			
-			return new DoctorDTO(entity);				
+			return new DoctorDTO(entity,entity.getSpecialties());				
 		} 
 		catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException("Id " + id + " não encontrado!");
@@ -87,6 +96,17 @@ public class DoctorService {
 	private Doctor copyDtoToEntity(DoctorDTO dto, Doctor entity) {
 		entity.setName(validateDto(dto.getName()) ? dto.getName() : entity.getName());
 		entity.setBirthDate(validateDto(dto.getBirthDate()) ? dto.getBirthDate() : entity.getBirthDate());
+		
+		
+		entity.getSpecialties().clear();
+		
+		for (SpecialtyDTO sp : dto.getSpecialties()) {
+					
+			Specialty specialty = specialtyRepository.getOne(sp.getId());
+					
+			entity.getSpecialties().add(specialty);			
+		}
+		
 		return entity;
 	}
 	
